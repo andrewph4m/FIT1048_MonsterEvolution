@@ -1,0 +1,7 @@
+﻿  Main.cpp
+c:\users\andre\documents\visual studio 2013\projects\assignment3\assignment3\main.cpp(29): warning C4244: 'argument' : conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\andre\documents\visual studio 2013\projects\assignment3\assignment3\main.cpp(67): warning C4018: '<' : signed/unsigned mismatch
+c:\users\andre\documents\visual studio 2013\projects\assignment3\assignment3\main.cpp(72): warning C4101: 'monsterChar' : unreferenced local variable
+c:\users\andre\documents\visual studio 2013\projects\assignment3\assignment3\main.cpp(178): warning C4018: '<' : signed/unsigned mismatch
+c:\users\andre\documents\visual studio 2013\projects\assignment3\assignment3\main.cpp(243): warning C4018: '<' : signed/unsigned mismatch
+  Assignment3.vcxproj -> C:\Users\andre\Documents\Visual Studio 2013\Projects\Assignment3\Debug\Assignment3.exe
