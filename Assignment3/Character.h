@@ -24,11 +24,15 @@ public:
 	virtual int attack();
 	void beHit(int amount);
 
-	void setXPosition(int newXPos);
-	void setYPosition(int newYPos);
-	void setXandYPosition(int newXPos, int newYPos);
+	virtual void setXPosition(int newXPos);
+	virtual void setYPosition(int newYPos);
+	virtual void setXandYPosition(int newXPos, int newYPos);
 
-	void increaseHealth(int increaseHealth);
+	virtual void increaseHealth(int increaseHealth);
+	virtual void increaseSkillLevel(int skillLevel);
+
+	virtual void setHealth(int newHealth);
+	virtual void setSkillLevel(int newSkillLevel);
 
 	virtual std::string display();
 };

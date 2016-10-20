@@ -40,10 +40,13 @@ void Player::setPlayerName(std::string newName){
 	playerName = newName;
 }
 
-void Player::setInitPos(){
+int Player::setInitPos(){
 	srand(time(NULL));
+	int output;
 	xPosition = rand() % 9;
+	output = xPosition;
 	yPosition = 0;
+	return output;
 }
 
 

@@ -7,6 +7,7 @@
 
 
 #include "Monster.h"
+#include "EvolvedMonster.h"
 #include "Character.h"
 
 class Player : public Character{
@@ -25,7 +26,7 @@ public:
 	void addMonster(Monster* m);
 	
 	void setPlayerName(std::string newName);
-	void setInitPos();
+	int setInitPos();
 
 	void movement(int xPos, int yPos, int destX, int destY);
 

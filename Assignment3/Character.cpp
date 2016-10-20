@@ -55,6 +55,11 @@ void Character::increaseHealth(int healthIncrease){
 	currentHealth += healthIncrease;
 }
 
+void Character::increaseSkillLevel(int skillIncrease){
+	skillLevel += skillIncrease;
+}
+
+
 std::string Character::display(){
 	std::stringstream ss;
 	ss << "Skill level: " << skillLevel << std::endl;
@@ -65,4 +70,12 @@ std::string Character::display(){
 void Character::setXandYPosition(int newXPos, int newYPos){
 	xPosition = newXPos;
 	yPosition = newYPos;
+}
+
+void Character::setSkillLevel(int newSkill){
+	skillLevel = newSkill;
+}
+
+void Character::setHealth(int newHealth){
+	currentHealth = newHealth;
 }

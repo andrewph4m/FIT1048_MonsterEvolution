@@ -27,3 +27,7 @@ void Boss::resetHealth(){
 void Boss::resetSkillLevel(){
 	skillLevel = 10;
 }
+
+int Boss::getPowerModifier(){
+	return powerMod;
+}

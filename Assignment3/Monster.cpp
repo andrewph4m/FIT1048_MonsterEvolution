@@ -6,7 +6,6 @@
 int Monster::numOfMonsters = 0;
 
 Monster::Monster(monsterType t){
-	srand(time(NULL));
 	mType = new monsterType(t);
 	skillLevel = rand() % 3 + 1;
 	maxHealth = rand() % 6 + 3;

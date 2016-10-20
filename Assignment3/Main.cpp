@@ -18,9 +18,9 @@ int detectMonster(Player& p1, int xPos, int yPos, std::vector<Monster*> monsterL
 void battle(Player& p1, Monster* m1);
 void capture(Player& p1, Monster* m1);
 void displayDungeon(char dungeonArray[][20]);
-void generateDungeon(Player& p1, char dungeonArray[][20]);
+void generateDungeon(Player& p1, char dungeonArray[][20], char testMode);
 void spawnMonsters(char dungeonArray[][20], Monster* m1);
-void setExit(char dungeonArray[][20]);
+int setExit(char dungeonArray[][20]);
 
 
 bool checkExited(char dungeonArray[][20], int playerX, int PlayerY);
@@ -28,9 +28,14 @@ bool checkExited(char dungeonArray[][20], int playerX, int PlayerY);
 int main(){
 	srand(time(NULL));
 
+	char testMode;
+	int playerXStart;
+
+	std::cout << "Test mode? " << std::endl;
+	std::cin >> testMode;
 
 	Player p1("Andrew");
-	p1.setInitPos();
+	playerXStart = p1.setInitPos();
 	
 	//======================
 	
@@ -41,18 +46,13 @@ int main(){
 	int yExit = 19;
 	int monsterPosition;
 
-	setExit(dungeon);
+	
 
 	std::cout << "Stuff" << std::endl;
 
-	generateDungeon(p1, dungeon);
+	generateDungeon(p1, dungeon, testMode);
+	xExit = setExit(dungeon);
 
-	for (int x = 0; x < 10; x++){
-		if (dungeon[x][19] == 'X'){
-			xExit = x;
-		}
-	}
-	
 	std::vector<Monster*> monsterType;
 
 	for (int i = 0; i < 10; i++){
@@ -62,8 +62,6 @@ int main(){
 		monsterType.push_back(new Monster(Octopod));
 	}
 
-	
-	std::cout << "Stuff" << std::endl;
 
 	for (int i = 0; i < monsterType.size(); i++){			
 		bool isValid = false;
@@ -83,6 +81,9 @@ int main(){
 	}
 
 	
+
+	
+	
 	
 	
 
@@ -91,7 +92,7 @@ int main(){
 	
 	
 	do{
-		
+		generateDungeon(p1, dungeon, testMode);
 		displayDungeon(dungeon);
 
 		std::cout << "Which direction? " << std::endl;
@@ -101,7 +102,13 @@ int main(){
 		if (playerMovement == 'w') {
 			if (checkForMonsters(p1, p1.XPos() - 1, p1.YPos(),  monsterType)){
 				monsterPosition = detectMonster(p1, p1.XPos() - 1, p1.YPos(), monsterType);
-				capture(p1, monsterType[monsterPosition]);
+				if (monsterType[monsterPosition]->getType() == "Octopod"){
+					battle(p1, monsterType[monsterPosition]);
+				}
+				else {
+					capture(p1, monsterType[monsterPosition]);
+				}
+				
 
 				monsterType[monsterPosition]->setXandYPosition(-10, -10);
 
@@ -113,7 +120,12 @@ int main(){
 		else if (playerMovement == 'a') {
 			if (checkForMonsters(p1, p1.XPos(), p1.YPos() - 1, monsterType)){
 				monsterPosition = detectMonster(p1, p1.XPos(), p1.YPos() - 1, monsterType);
-				capture(p1, monsterType[monsterPosition]);
+				if (monsterType[monsterPosition]->getType() == "Octopod"){
+					battle(p1, monsterType[monsterPosition]);
+				}
+				else {
+					capture(p1, monsterType[monsterPosition]);
+				}
 
 				monsterType[monsterPosition]->setXandYPosition(-10, -10);
 
@@ -124,7 +136,12 @@ int main(){
 		else if (playerMovement == 's') {
 			if (checkForMonsters(p1, p1.XPos() + 1, p1.YPos(), monsterType)){
 				monsterPosition = detectMonster(p1, p1.XPos() +1, p1.YPos(), monsterType);
-				capture(p1, monsterType[monsterPosition]);
+				if (monsterType[monsterPosition]->getType() == "Octopod"){
+					battle(p1, monsterType[monsterPosition]);
+				}
+				else {
+					capture(p1, monsterType[monsterPosition]);
+				}
 
 				monsterType[monsterPosition]->setXandYPosition(-10, -10);
 
@@ -135,7 +152,12 @@ int main(){
 		else if (playerMovement == 'd') {
 			if (checkForMonsters(p1, p1.XPos(), p1.YPos() + 1, monsterType)){
 				monsterPosition = detectMonster(p1, p1.XPos(), p1.YPos() + 1, monsterType);
-				capture(p1, monsterType[monsterPosition]);
+				if (monsterType[monsterPosition]->getType() == "Octopod"){
+					battle(p1, monsterType[monsterPosition]);
+				}
+				else {
+					capture(p1, monsterType[monsterPosition]);
+				}
 
 				monsterType[monsterPosition]->setXandYPosition(-10, -10);
 
@@ -147,7 +169,7 @@ int main(){
 		system("CLS");
 
 
-		generateDungeon(p1, dungeon);
+		generateDungeon(p1, dungeon, testMode);
 		
 	} while (!(p1.XPos() == xExit && p1.YPos() == yExit));
 
@@ -155,6 +177,11 @@ int main(){
 	
 
 	system("pause");
+
+	for (int i = 0; i < monsterType.size(); i++){
+		delete monsterType[i];
+	}
+
 	return 0;
 }
 
@@ -176,6 +203,8 @@ int detectMonster(Player& p1, int xPos, int yPos, std::vector<Monster*> monsterL
 }
 
 void battle(Player& p1, Monster* m1){
+	std::cout << "A wild Octopod appeared!" << std::endl;
+	std::cout << m1->display() << std::endl;
 	while ((p1.getCurrentHealth() > 0) && (m1->getCurrentHealth() >0)){
 		int p1Atk = p1.attack() + (rand() % 6 + 1);
 		int monstAtk = m1->attack() + (rand() % 6 + 1);
@@ -186,21 +215,26 @@ void battle(Player& p1, Monster* m1){
 			std::cout << "You hit the monster! " << std::endl;
 			std::cout << "The monster has " << m1->getCurrentHealth() << " health left" << std::endl;
 		}
-		else if (p1Atk > monstAtk){
+		else if (p1Atk < monstAtk){
 			p1.beHit(1);
 			std::cout << "The monster hit you! " << std::endl;
 			std::cout << "You have " << p1.getCurrentHealth() << " health left" << std::endl;
+		}
+		else {
+			std::cout << "You too both miss! How can you both miss...... " << std::endl;
 		}
 	}
 }
 
 
 void capture(Player& p1, Monster* m1){
+		std::cout << "A wild " << m1->getType() << " appeared!" << std::endl;
+		std::cout << m1->display() << std::endl;
 		int p1Skill = p1.attack() + (rand() % 6 + 1);
 		int monstSkill = m1->attack() + (rand() % 6 + 1);
 		std::cout << p1Skill << std::endl;
 		std::cout << monstSkill << std::endl;
-		if (p1Skill > monstSkill){
+		if (p1Skill >= monstSkill){
 			std::cout << "Gotcha! " << m1->getType() << " was caught!!! " << std::endl;
 			p1.addMonster(m1);
 		}
@@ -209,8 +243,10 @@ void capture(Player& p1, Monster* m1){
 		}
 }
 
-void setExit(char dungeonArray[][20]){
-	dungeonArray[rand() % 9][19] = 'X';
+int setExit(char dungeonArray[][20]){
+	int output = rand() % 9;
+	dungeonArray[output][19] = 'X';
+	return output;
 }
 
 void displayDungeon(char dungeonArray[][20]){
@@ -240,30 +276,48 @@ bool checkForMonsters(Player& p1, int xPos, int yPos, std::vector<Monster*> mons
 	return found;
 }
 
-void generateDungeon(Player& p1, char dungeonArray[][20]){
-	for (int x = 0; x < 10; x++){
-		for (int y = 0; y < 20; y++){
-			if (p1.confirmPlayerPos(x, y)){
-				dungeonArray[x][y] = '@';
-			}
-			else if (dungeonArray[x][y] == 'X') {
-				dungeonArray[x][y] = 'X';
-			}
-			else if (dungeonArray[x][y] == 'B'){
-				dungeonArray[x][y] = 'B';
-			}
-			else if (dungeonArray[x][y] == 'P'){
-				dungeonArray[x][y] = 'P';
-			}
-			else if (dungeonArray[x][y] == 'E'){
-				dungeonArray[x][y] = 'E';
-			}
-			else if (dungeonArray[x][y] == 'O'){
-				dungeonArray[x][y] = 'O';
-			}
-			else {
-				dungeonArray[x][y] = '-';
+void generateDungeon(Player& p1, char dungeonArray[][20], char testMode){
+	if (testMode == 'Y'){
+		for (int x = 0; x < 10; x++){
+			for (int x = 0; x < 10; x++){
+				for (int y = 0; y < 20; y++){
+					if (p1.confirmPlayerPos(x, y)){
+						dungeonArray[x][y] = '@';
+					}
+					else if (dungeonArray[x][y] == 'X') {
+						dungeonArray[x][y] = 'X';
+					}
+					else if (dungeonArray[x][y] == 'B'){
+						dungeonArray[x][y] = 'B';
+					}
+					else if (dungeonArray[x][y] == 'P'){
+						dungeonArray[x][y] = 'P';
+					}
+					else if (dungeonArray[x][y] == 'E'){
+						dungeonArray[x][y] = 'E';
+					}
+					else if (dungeonArray[x][y] == 'O'){
+						dungeonArray[x][y] = 'O';
+					}
+					else {
+						dungeonArray[x][y] = '-';
+					}
+				}
 			}
 		}
 	}
+	else {
+		for (int x = 0; x < 10; x++){
+			for (int y = 0; y < 20; y++){
+				if (p1.confirmPlayerPos(x, y)){
+					dungeonArray[x][y] = '@';
+				}
+				else {
+					dungeonArray[x][y] = '-';
+				}
+			}
+		}
+	}
+
+	
 }

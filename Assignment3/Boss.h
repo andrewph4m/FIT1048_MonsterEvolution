@@ -13,8 +13,6 @@ public:
 	virtual std::string displayMonster();
 	virtual void resetSkillLevel();
 	virtual void resetHealth();
-	virtual void setSkillLevel();
-	virtual void setHealth();
 	virtual int getPowerModifier();
 };
 
