@@ -67,13 +67,15 @@
     <ClInclude Include="Character.h" />
     <ClInclude Include="EvolvedMonster.h" />
     <ClInclude Include="Include.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="Monster.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Boss.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="EvolvedMosnter.cpp" />
+    <ClCompile Include="EvolvedMonster.cpp" />
+    <ClCompile Include="Item.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Monster.cpp" />
     <ClCompile Include="Player.cpp" />

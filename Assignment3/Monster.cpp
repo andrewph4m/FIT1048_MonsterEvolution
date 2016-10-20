@@ -14,6 +14,7 @@ Monster::Monster(monsterType t){
 }
 
 Monster::~Monster(){
+	delete mType;
 	numOfMonsters--;
 }
 
@@ -29,7 +30,6 @@ std::string Monster::displayMonster(){
 	}
 	ss << "Skill level: " << skillLevel << std::endl;
 	ss << "Health: " << currentHealth << " / " << maxHealth << std::endl;
-	ss << "Position: " << XPos() << " " << YPos() << std::endl;
 	return ss.str();
 }
 

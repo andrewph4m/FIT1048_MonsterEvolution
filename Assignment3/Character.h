@@ -32,6 +32,7 @@ public:
 	virtual void increaseSkillLevel(int skillLevel);
 
 	virtual void setHealth(int newHealth);
+	virtual void setMaxHealth(int newHealth);	
 	virtual void setSkillLevel(int newSkillLevel);
 
 	virtual std::string display();

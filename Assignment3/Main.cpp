@@ -16,10 +16,12 @@ bool checkForMonsters(Player& p1, int xPos, int yPos, std::vector<Monster*> mons
 int detectMonster(Player& p1, int xPos, int yPos, std::vector<Monster*> monsterList);
 
 void battle(Player& p1, Monster* m1);
+bool finalBattle(Boss* m1, EvolvedMonster* fra);
 void capture(Player& p1, Monster* m1);
 void displayDungeon(char dungeonArray[][20]);
+void evolveMonster();
 void generateDungeon(Player& p1, char dungeonArray[][20], char testMode);
-void spawnMonsters(char dungeonArray[][20], Monster* m1);
+void spawnMonsters(char dungeonArray[][20], std::vector<Monster*> monsterLists);
 int setExit(char dungeonArray[][20]);
 
 
@@ -28,8 +30,13 @@ bool checkExited(char dungeonArray[][20], int playerX, int PlayerY);
 int main(){
 	srand(time(NULL));
 
+	bool hasCreated = false;
+
 	char testMode;
+
 	int playerXStart;
+
+	std::string evolveType = "";
 
 	std::cout << "Test mode? " << std::endl;
 	std::cin >> testMode;
@@ -61,31 +68,10 @@ int main(){
 		monsterType.push_back(new Monster(Emoo));
 		monsterType.push_back(new Monster(Octopod));
 	}
+	EvolvedMonster* frankenstein;
 
 
-	for (int i = 0; i < monsterType.size(); i++){			
-		bool isValid = false;
-		do{
-			int randX = rand() % 9;
-			int randY = rand() % 19;
-			char monsterChar;
-			monsterType[i]->setXandYPosition(randX, randY);
-			if (dungeon[monsterType[i]->XPos()][monsterType[i]->YPos()] == '-'){
-				if (monsterType[i]->getType() == "Bugbear"){ dungeon[monsterType[i]->XPos()][monsterType[i]->YPos()] = 'B'; }
-				else if (monsterType[i]->getType() == "Platypie") { dungeon[monsterType[i]->XPos()][monsterType[i]->YPos()] = 'P'; }
-				else if (monsterType[i]->getType() == "Emoo") { dungeon[monsterType[i]->XPos()][monsterType[i]->YPos()] = 'E'; }
-				else if (monsterType[i]->getType() == "Octopod") { dungeon[monsterType[i]->XPos()][monsterType[i]->YPos()] = 'O'; }
-				isValid = true;
-			}
-		} while (!isValid);	
-	}
-
-	
-
-	
-	
-	
-	
+	spawnMonsters(dungeon, monsterType);
 
 	std::cout << std::endl;
 
@@ -167,14 +153,58 @@ int main(){
 		}
 
 		system("CLS");
+	
+		if (!hasCreated){
+			if (p1.getMonsterNumber() >= 5){
+				if (p1.getNumOfMonsterTypes("Bugbear") == 5 || p1.getNumOfMonsterTypes("Platypie") == 5 || p1.getNumOfMonsterTypes("Emoo") == 5){
+					if (p1.getNumOfMonsterTypes("Bugbear") == 5){
+						frankenstein = new EvolvedMonster(Bugbear);
+						evolveType = "Bugbear";
+					}
+					else if (p1.getNumOfMonsterTypes("Platypie") == 5){
+						frankenstein = new EvolvedMonster(Platypie);
+						evolveType = "Platypie";
+					}
+					else if (p1.getNumOfMonsterTypes("Emoo") == 5){
+						frankenstein = new EvolvedMonster(Emoo);
+						evolveType = "Emoo";
+					}
+					std::cout << "Oh? " << evolveType << " is evolving!!!!" << std::endl;
+					std::cout << "Congrats! " << evolveType << " has evolved!" << std::endl;
+					frankenstein->setMaxHealth(p1.getTotalTypeHealth(evolveType));
+					frankenstein->setHealth(p1.getTotalTypeHealth(evolveType));
+					frankenstein->setSkillLevel(p1.getTotalTypeSkill(evolveType));
+					std::cout << frankenstein->displayMonster() << std::endl;
+					hasCreated = true;
+				}	
+			}
+		}
+		std::cout << p1.getTotalTypeSkill("Bugbear") << std::endl;
+		std::cout << p1.getTotalTypeSkill("Platypie") << std::endl;
+		std::cout << p1.getTotalTypeSkill("Emoo") << std::endl;
 
+		if (!(hasCreated) && (p1.XPos() == xExit && p1.YPos() == yExit)){
+			std::cout << "Teleporting back....." << std::endl;
+			p1.setXandYPosition(playerXStart, 0);
+		}
 
 		generateDungeon(p1, dungeon, testMode);
-		
-	} while (!(p1.XPos() == xExit && p1.YPos() == yExit));
+
+	} while (!(p1.XPos() == xExit && p1.YPos() == yExit) || !hasCreated);
+
+	Boss* finalBoss = new Boss(Skeletor);
+	std::cout << "Final boss: " << std::endl;
+	std::cout << finalBoss->displayMonster() << std::endl;
+
+	if (finalBattle(finalBoss, frankenstein)){
+		std::cout << "YOU WIN! " << std::endl;
+	}
+	else {
+		std::cout << "YOU DIED " << std::endl;
+	}
 
 
-	
+
 
 	system("pause");
 
@@ -185,6 +215,33 @@ int main(){
 	return 0;
 }
 
+
+bool finalBattle(Boss* m1, EvolvedMonster* fra){
+	int bossMult = m1->getPowerModifier();
+	int monsMult = fra->getPowerModifier();
+	int bossAtk = 0;
+	int monsAtk = 0;
+	while (m1->getCurrentHealth() > 0 && fra->getCurrentHealth() > 0){
+		bossAtk = m1->attack() + (rand() % 6 + 1) + bossMult;
+		monsAtk = fra->attack() + (rand() % 6 + 1) + monsMult;
+		if (bossAtk > monsAtk){
+			fra->beHit(1);
+			std::cout << "Skeletor hits your monster!" << std::endl;
+			std::cout << "Your monster has " << fra->getCurrentHealth() << " health left" << std::endl;
+		}
+		else if (bossAtk < monsAtk){
+			m1->beHit(1);
+			std::cout << "Your monster hits the skeletor! " << std::endl;
+			std::cout << "Skeletor has " << m1->getCurrentHealth() << " health left" << std::endl;
+		}
+		else {
+			std::cout << "You too both miss! How can you both miss...... " << std::endl;
+		}
+		bossMult += bossMult;
+		monsMult += monsMult;
+	}
+	return (m1->getCurrentHealth() == 0);
+}
 
 int detectMonster(Player& p1, int xPos, int yPos, std::vector<Monster*> monsterList){
 	bool found = false;
@@ -258,8 +315,23 @@ void displayDungeon(char dungeonArray[][20]){
 	}
 }
 
-void spawnMonsters(char dungeonArray[][20], Monster* m1){
+void spawnMonsters(char dungeonArray[][20], std::vector<Monster*> monsterLists){
+	for (int i = 0; i < monsterLists.size(); i++){
+		bool isValid = false;
+		do{
+			int randX = rand() % 10;
+			int randY = rand() % 19;
 
+			monsterLists[i]->setXandYPosition(randX, randY);
+			if (dungeonArray[monsterLists[i]->XPos()][monsterLists[i]->YPos()] == '-'){
+				if (monsterLists[i]->getType() == "Bugbear"){ dungeonArray[monsterLists[i]->XPos()][monsterLists[i]->YPos()] = 'B'; }
+				else if (monsterLists[i]->getType() == "Platypie") { dungeonArray[monsterLists[i]->XPos()][monsterLists[i]->YPos()] = 'P'; }
+				else if (monsterLists[i]->getType() == "Emoo") { dungeonArray[monsterLists[i]->XPos()][monsterLists[i]->YPos()] = 'E'; }
+				else if (monsterLists[i]->getType() == "Octopod") { dungeonArray[monsterLists[i]->XPos()][monsterLists[i]->YPos()] = 'O'; }
+				isValid = true;
+			}
+		} while (!isValid);
+	}
 }
 
 bool checkForMonsters(Player& p1, int xPos, int yPos, std::vector<Monster*> monsterList){
@@ -277,7 +349,7 @@ bool checkForMonsters(Player& p1, int xPos, int yPos, std::vector<Monster*> mons
 }
 
 void generateDungeon(Player& p1, char dungeonArray[][20], char testMode){
-	if (testMode == 'Y'){
+	if (toupper(testMode) == 'Y'){
 		for (int x = 0; x < 10; x++){
 			for (int x = 0; x < 10; x++){
 				for (int y = 0; y < 20; y++){
@@ -318,6 +390,4 @@ void generateDungeon(Player& p1, char dungeonArray[][20], char testMode){
 			}
 		}
 	}
-
-	
 }

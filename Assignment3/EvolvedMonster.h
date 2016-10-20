@@ -8,12 +8,12 @@ class EvolvedMonster : public Monster{
 private:
 	int powerMod;
 public:
-	EvolvedMonster();
-	~EvolvedMonster();
-	virtual void setSkillLevel();
-	virtual void setHealth();
-	virtual void setPowerModifier();
-	virtual int getPowerModifier();
+	EvolvedMonster(monsterType newType);
+	virtual ~EvolvedMonster();
+
+	void setPowerModifier(int newPowerMod);
+	int getPowerModifier();
+
 };
 
 #endif

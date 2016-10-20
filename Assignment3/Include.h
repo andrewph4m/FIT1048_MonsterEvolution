@@ -9,4 +9,10 @@ enum monsterType {
 	Skeletor
 };
 
+enum itemType {
+	weapon,
+	magical,
+	treasure
+};
+
 #endif

@@ -14,7 +14,7 @@ Boss::~Boss(){
 
 std::string Boss::displayMonster(){
 	std::stringstream ss;
-	ss << "Type: Skeletor " << std::endl;
+	ss << "BOSS: Skeletor " << std::endl;
 	ss << "Skill level: " << skillLevel << std::endl;
 	ss << "Current health: " << currentHealth << std::endl;
 	return ss.str();

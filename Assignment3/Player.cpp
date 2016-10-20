@@ -49,6 +49,48 @@ int Player::setInitPos(){
 	return output;
 }
 
+int Player::getNumOfMonsterTypes(std::string monstType){
+	int output = 0;
+	for (int i = 0; i < monsterList.size(); i++){
+		if (monsterList[i]->getType() == monstType){
+			output++;
+		}
+	}
+	return output;
+}
+
+int Player::getTotalTypeHealth(std::string monstType){
+	int output = 0;
+	for (int i = 0; i < monsterList.size(); i++){
+		if (monsterList[i]->getType() == monstType){
+			output += monsterList[i]->getCurrentHealth();
+		}
+	}
+	return output;
+}
+
+
+int Player::getTotalTypeSkill(std::string monstType){
+	int output = 0;
+	for (int i = 0; i < monsterList.size(); i++){
+		if (monsterList[i]->getType() == monstType){
+			output += monsterList[i]->getSkillLevel();
+		}
+	}
+	return output;
+}
+
+int Player::removeMonster(std::string monstType){
+	int output = 0;
+	for (int i = 0; i < monsterList.size(); i++){
+		if (monsterList[i]->getType() == monstType){
+			monsterList[i] = monsterList.back();
+			monsterList.pop_back();
+		}
+	}
+	return output;
+}
+
 
 void Player::movement(int xPos, int yPos, int destX, int destY){
 	if (destX < 0 || destX > 9 || destY < 0 || destY > 19){
@@ -61,3 +103,9 @@ void Player::movement(int xPos, int yPos, int destX, int destY){
 	}
 
 };
+
+
+
+int Player::getMonsterNumber(){
+	return monsterList.size();
+}

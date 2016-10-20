@@ -79,3 +79,7 @@ void Character::setSkillLevel(int newSkill){
 void Character::setHealth(int newHealth){
 	currentHealth = newHealth;
 }
+
+void Character::setMaxHealth(int newMaxHealth){
+	maxHealth = newMaxHealth;
+}

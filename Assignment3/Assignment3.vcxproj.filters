@@ -33,6 +33,9 @@
     <ClInclude Include="EvolvedMonster.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Player.cpp">
@@ -50,7 +53,10 @@
     <ClCompile Include="Character.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EvolvedMosnter.cpp">
+    <ClCompile Include="EvolvedMonster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
